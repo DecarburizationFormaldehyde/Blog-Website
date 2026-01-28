@@ -17,7 +17,7 @@ class Category(Base):
     order = Column(Integer, default=0) #排序权重
 
     # 关系定义
-    parent = relationship("Category", back_populates="children")
+    parent = relationship("Category", remote_side=[id], backref="children")
     posts = relationship("Post", back_populates="category")
 
     __table_args__ = (

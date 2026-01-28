@@ -35,7 +35,7 @@ class User(Base):
 
     # 关系定义
     posts = relationship("Post", back_populates="author")
-    comments = relationship("Comment", back_populates="user")
+    comments = relationship("Comment", back_populates="user", lazy="dynamic")
 
     # 索引
     __table_args__ = (

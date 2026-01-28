@@ -3,12 +3,12 @@ from sqlalchemy import desc,asc,or_,and_
 from typing import Optional,List,Dict,Any
 from datetime import datetime
 
-from backend.app.models.post import Post
-from ...app.models.post import Post
-from ...app.models.tags import Tag
-from ...app.models.user import User
-from ...app.models.categories import Category
-from ...app.schemas.post import PostBase,PostUpdate
+
+from ..models.post import Post
+from ..models.tags import Tag
+from ..models.user import User
+from ..models.categories import Category
+from ..schemas.post import PostBase,PostUpdate
 
 def get_post(db:Session,post_id:int) -> Optional[Post]:
     """获取单个文章"""
@@ -216,7 +216,7 @@ def increment_post_views(db:Session,post_id:int)->Optional[Post]:
     返回:
         Optional[Post]: 更新后的文章对象，如果文章不存在则返回None
     """""
-    db_post =  get_posts(db,post_id)
+    db_post =  get_post(db,post_id)  # 修复：使用get_post而不是get_posts
     if db_post:
         # db_post.views=db_post.views+1
         db.commit()

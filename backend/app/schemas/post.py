@@ -18,7 +18,7 @@ class PostBase(BaseModel):
 
 
 # 创建文章
-class PostCreate(BaseModel):
+class PostCreate(PostBase):
     @field_validator("title")
     def validate_title(cls, value):
         if not value or not value.strip():
@@ -45,7 +45,7 @@ class Post(PostBase,BaseSchema):
     author_id:int
     word_count:int
     reading_time:Optional[int]=None
-    create_at:datetime
+    create_at: datetime = Field(alias="created_at")
     update_at:Optional[datetime]=None
     published_at:Optional[datetime]=None
 
@@ -63,7 +63,7 @@ class PostListItem(BaseSchema):
     excerpt: Optional[str]
     featured_image: Optional[str]
     status: str
-    create_at: datetime
+    created_at: datetime
     published_at: Optional[datetime]
     author: Optional["User"]=None
     category: Optional["Category"]=None
