@@ -20,8 +20,7 @@ def read_categories(
             "id": cat.id,
             "name": cat.name,
             "slug": cat.slug,
-            "description": cat.description,
-            "post_count": cat.post_count
+            "description": cat.description
         }
         for cat in categories
     ]

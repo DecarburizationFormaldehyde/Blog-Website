@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from ...database import get_db
 from ...schemas.post import Post, PostCreate, PostUpdate, PostListItem
 from ...crud import post as post_crud
-from ...core.security import get_current_user  # 稍后实现
+from ..deps import get_current_user  # 稍后实现
 from ...models.user import User  # 用户模型
 router = APIRouter()
 

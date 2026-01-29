@@ -12,13 +12,16 @@ from .models import post, user, categories, tags, post_tag, series, comment, set
 # 配置所有映射器以解决循环依赖
 configure_mappers()
 
-from .api.v1 import posts,categories,tags
+from .api.v1 import posts,categories,tags,auth,users
+from .api.deps import settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 启动时
-    print("🚀 博客API启动中...")
+    print(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} 启动中...")
+    print(f"📊 数据库: {settings.DATABASE_URL}")
+    print(f"🔐 调试模式: {settings.DEBUG}")
 
     # 可以在这里添加初始化逻辑
     # 比如：检查表是否存在，创建默认数据等
@@ -29,39 +32,52 @@ async def lifespan(app: FastAPI):
     yield  # 应用运行
 
     # 关闭时
-    print("👋 博客API关闭...")
+    print(f"👋 {settings.APP_NAME} 关闭...")
 
 
 app = FastAPI(
-    title="博客API",
+    title=settings.APP_NAME,
     description="基于FastAPI和React的博客系统API",
-    version="1.0.0",
+    version=settings.APP_VERSION,
     lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
 )
 
 # 配置CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 @app.get("/",tags=["健康检查"])
 def read_root():
-    return {"message": "博客API运行中！", "docs": "/docs"}
+    return {
+        "app": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "status": "running",
+        "docs": "/docs" if settings.DEBUG else "disabled in production",
+        "health": "/health"
+    }
 
 @app.get("/api/health",tags=["健康检查"])
 def health_check():
-    return {"status": "healthy", "service": "blog-api"}
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "version": settings.APP_VERSION
+    }
 
 # 注册路由
 app.include_router(posts.router, prefix="/api/v1",tags=["文章"])
 app.include_router(categories.router, prefix="/api/v1",tags=["分类"])
 app.include_router(tags.router, prefix="/api/v1",tags=["标签"])
 
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["认证"])
+
+app.include_router(users.router, prefix="/api/v1/users", tags=["用户管理"])
 from fastapi import Request
 from fastapi.responses import JSONResponse
 

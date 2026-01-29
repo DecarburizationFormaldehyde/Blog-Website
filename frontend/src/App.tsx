@@ -6,7 +6,22 @@ interface Post {
     id: number,
     title: string,
     content: string,
-    created_at: string
+    slug: string,
+    excerpt: string | null,
+    featured_image: string|null,
+    status: string
+    created_at: string,
+    published_at: string,
+    author: User[],
+    category: category[]
+}
+
+interface User {
+    id: number,
+}
+
+interface category {
+    id: number,
 }
 
 function App() {
@@ -92,9 +107,7 @@ function App() {
                         posts.map((post) => (
                             <div key={post.id} className={'post-card'}>
                                 <h3>{post.title}</h3>
-                                <p>{post.content.length > 100 ?
-                                `${post.content.substring(0,20)}...`:
-                                post.content}</p>
+                                {post.excerpt!= null ? (post.excerpt): ("这是摘要")}
                                 <p>{post.created_at}</p>
                                  <div className="post-meta">
                                   <span>ID: {post.id}</span>
