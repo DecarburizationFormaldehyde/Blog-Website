@@ -26,7 +26,7 @@ class PostCreate(PostBase):
 
 # 更新文章
 class PostUpdate(BaseModel):
-    title: Optional[str] = Field(..., min_length=1, max_length=200)
+    title: Optional[str] = Field(None, min_length=1, max_length=200)
     content: Optional[str] = None
     excerpt: Optional[str] = Field(None, max_length=500)
     status: Optional[str] = Field(default="draft", pattern="^(draft|published|archived)$")
@@ -58,7 +58,7 @@ class Post(PostBase,BaseSchema):
 # 文章列表
 class PostListItem(BaseSchema):
     id : int
-    title: str
+    title: Optional[str]
     slug: str
     excerpt: Optional[str]
     featured_image: Optional[str]

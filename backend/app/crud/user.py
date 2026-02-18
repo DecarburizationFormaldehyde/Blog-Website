@@ -54,8 +54,9 @@ def create_user(db: Session, user: UserCreate) -> User:
         website=user.website,
         github=user.github,
         twitter=user.twitter,
-        linkedin=user.linkedina
+        linkedin=user.linkedin
     )
+    print(db_user)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

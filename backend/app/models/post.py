@@ -10,7 +10,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     # 基础信息
-    title = Column(String(200))
+    title = Column(String(200), nullable=False, default="Untitled")
     slug = Column(String(200), unique=True, nullable=False, index=True)  # URL友好的标识
     content = Column(Text,nullable=False)
     excerpt = Column(String(500))

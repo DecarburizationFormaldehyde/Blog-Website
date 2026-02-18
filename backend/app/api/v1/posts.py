@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from ...database import get_db
 from ...schemas.post import Post, PostCreate, PostUpdate, PostListItem
 from ...crud import post as post_crud
-from ..deps import get_current_user  # 稍后实现
+from ..deps import get_current_user,get_current_active_user
 from ...models.user import User  # 用户模型
 router = APIRouter()
 
@@ -61,7 +61,7 @@ def read_posts(
     return posts
 
 
-@router.get("posts/{post_id}",response_model=Post)
+@router.get("/posts/{post_id}",response_model=Post)
 def read_post(
         post_id:int,
         db:Session = Depends(get_db)
@@ -84,7 +84,7 @@ def read_post(
     return db_post
 
 
-@router.get("posts/slug/{slug}",response_model=Post)
+@router.get("/posts/slug/{slug}",response_model=Post)
 def read_post_by_slug(
         slug: str,
         db:Session = Depends(get_db)
@@ -107,12 +107,12 @@ def read_post_by_slug(
 
     return db_post
 
-@router.post("posts",response_model=Post,status_code=status.HTTP_201_CREATED)
+@router.post("/posts",response_model=Post,status_code=status.HTTP_201_CREATED)
 def create_post(
         *,
         db:Session = Depends(get_db),
         post_in: PostCreate,
-        current_user: User = Depends(get_current_user)
+        current_user: User = Depends(get_current_active_user)
 ):
     """
     创建新文章
@@ -150,7 +150,7 @@ def update_post(
         db: Session = Depends(get_db),
         post_id: int,
         post_in: PostUpdate,
-        current_user: User = Depends(get_current_user)
+        current_user: User = Depends(get_current_active_user)
 ):
     """
     更新文章
@@ -168,7 +168,7 @@ def update_post(
     if not db_post:
         raise HTTPException(status_code=404,detail="文章不存在")
 
-    if db_post.author_id !=current_user.id and current_user.is_admin:
+    if db_post.author_id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403,detail="无权限")
 
     if post_in.category_id:
@@ -198,7 +198,7 @@ def delete_post(
         *,
         db: Session = Depends(get_db),
         post_id: int,
-        current_user: User = Depends(get_current_user)
+        current_user: User = Depends(get_current_active_user)
 ):
     """
     删除文章
@@ -214,7 +214,7 @@ def delete_post(
     db_post = post_crud.get_post(db,post_id=post_id)
     if not db_post:
         raise HTTPException(status_code=404,detail="文章不存在")
-    if db_post.author_id !=current_user.id and current_user.is_admin:
+    if db_post.author_id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=403,detail="无权限")
 
     success = post_crud.delete_post(db=db,post_id=post_id)

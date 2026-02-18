@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from ...database import get_db
 from ...models.tags import Tag
 
 router = APIRouter()

@@ -100,7 +100,9 @@ def create_post(db:Session,post:PostBase,author_id:int)->Post:
     import re
     from slugify import slugify
 
-    slug = slugify(post.title)
+    # 确保标题不为None
+    title = post.title or "untitled"
+    slug = slugify(title)
 
     counter = 1
     original_slug = slug
@@ -166,9 +168,12 @@ def update_post(db:Session,post_id:int,post_update:PostUpdate)->Optional[ Post]:
         db_post.tags.clear()
 
         for tag_name in post_update.tags:
+            if not tag_name or not tag_name.strip():  # 跳过空标签名
+                continue
             tag = db.query(Tag).filter(Tag.name==tag_name).first()
             if not tag:
-                tag = Tag(name=tag_name,slug=slugify(tag_name))
+                tag_slug = slugify(tag_name or "untagged")
+                tag = Tag(name=tag_name,slug=tag_slug)
                 db.add(tag)
                 db.flush()
             db_post.tags.append(tag)

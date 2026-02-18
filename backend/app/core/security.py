@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
-import jwt
-from jwt.exceptions import MalformedJWKError as JWTError
+from jose import jwt
+
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from ..database import get_db

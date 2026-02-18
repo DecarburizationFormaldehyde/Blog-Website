@@ -22,7 +22,7 @@ class UserBase(BaseModel):
     website:Optional[str] = None
     github:Optional[str] = None
     twitter:Optional[str] = None
-    Linkedin:Optional[str] = None
+    linkedin:Optional[str] = None
 # 创建用户
 class UserCreate(UserBase):
     password:str = Field(...,min_length=8,max_length=16)
