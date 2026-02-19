@@ -1,5 +1,5 @@
 from typing import Any, Dict, Optional
-from jose import jwt
+from jose import jwt, JWTError
 
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status

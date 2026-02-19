@@ -157,6 +157,56 @@ def change_password(
 
     return {"message":"密码修改成功"}
 
+@router.post("/refresh", response_model=Token)
+def refresh_token(
+        *,
+        refresh_token: str,
+        db: Session = Depends(get_db)
+):
+    """
+    刷新访问令牌
+    """
+    payload = verify_token(refresh_token)
+    
+    if not payload or payload.get("type") != "refresh":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="无效的刷新令牌"
+        )
+    
+    user_id = payload.get("user_id")
+    username = payload.get("sub")
+    
+    if not user_id or not username:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="令牌信息不完整"
+        )
+    
+    # 验证用户是否存在且活跃
+    user = user_crud.get_user(db, user_id=user_id)
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="用户不存在或已被禁用"
+        )
+    
+    # 创建新的访问令牌
+    new_access_token = create_access_token(
+        data={"sub": username, "user_id": user_id}
+    )
+    
+    # 创建新的刷新令牌（可选，根据安全策略决定是否更新）
+    new_refresh_token = create_refresh_token(
+        data={"sub": username, "user_id": user_id}
+    )
+    
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer"
+    }
+
 @router.post("/logout")
 def logout(
         current_user: UserModel = Depends(get_current_active_user)

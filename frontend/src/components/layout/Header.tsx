@@ -7,16 +7,14 @@ import {
     AvatarRoot,
     AvatarImage,
     AvatarFallback,
-    MenuRoot,
-    MenuContent,
-    MenuItem,
-    MenuTrigger,
-    IconButton,
+    IconButton, HStack,
 } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useAppDispatch } from "../../store/hooks";
 import { logout } from '../../store/slices/authSlice';
+import {ColorModeButton} from "../ui/color-mode.tsx";
+import { MenuContent, MenuRoot, MenuTrigger, MenuItem } from "../ui/menu"
 
 interface HeaderProps {
     onMenuClick?: () => void;
@@ -79,12 +77,13 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                         ) : null}
                     </Flex>
                 </Flex>
-                
-                <Flex gap="4">
-                    {/* 暂时移除主题切换功能，等待API确认 */}
+
+                <HStack gap="4">
+
+                    <ColorModeButton value="ghost"/>
                     {isAuthenticated ? (
-                        <MenuRoot>
-                            <MenuTrigger>
+                        <MenuRoot positioning={{ placement: "bottom-end", gutter: 8 }} >
+                            <MenuTrigger asChild>
                                 <Flex gap="2">
                                     <AvatarRoot size="sm">
                                         <AvatarImage src={user?.avatar || undefined} />
@@ -97,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                                     </Text>
                                 </Flex>
                             </MenuTrigger>
-                            <MenuContent>
+                            <MenuContent portalled color="gray.800" bg="white">
                                 <MenuItem value="profile" onClick={() => navigate('/profile')}>
                                     个人资料
                                 </MenuItem>
@@ -127,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                             </RouterLink>
                         </Flex>
                     )}
-                </Flex>
+                </HStack>
             </Flex>
         </Box>
     );
