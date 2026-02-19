@@ -4,13 +4,18 @@ from sqlalchemy.orm import sessionmaker
 
 # 数据库连接URL配置
 import os
-DB_PATH = os.path.join(os.path.dirname(__file__), "blog.db")
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
+from .core.config import settings
 
-# 创建数据库引擎，配置了SQLite数据库连接参数
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+
+# 根据数据库类型选择不同的连接参数
+if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+else:
+    # PostgreSQL 连接
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 # 创建本地会话工厂，配置了事务处理参数
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # 声明性基类，用于ORM模型继承

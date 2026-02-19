@@ -1,2 +1,21 @@
 .venv
-uv.lock
+backend/uv.lock
+
+# Docker
+.env
+.dockerignore
+
+# 数据库
+backend/data/
+backend/*.db
+
+# 日志
+*.log
+logs/
+
+# Node modules
+frontend/node_modules/
+
+# 构建产物
+frontend/dist/
+frontend/build/

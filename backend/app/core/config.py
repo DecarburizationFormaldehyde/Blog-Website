@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES:int = 30
     REFRESH_TOKEN_EXPIRE_DAYS:int = 7
 
-    DATABASE_URL: str = "sqlite:///./blog.db"
+    DATABASE_URL: str = "sqlite:///./data/blog.db"
 
     # CORS配置
     BACKEND_CORS_ORIGINS: list = ["http://localhost:3000","http://localhost:5173"]
