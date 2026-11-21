@@ -1,3 +1,4 @@
+import logging
 from unicodedata import category
 
 from sqlalchemy import asc, desc
@@ -125,8 +126,15 @@ def create_post(
     返回:
         Post: 创建的文章对象
     """
+    
+    # 验证必填字段
+    if not post_in.title:
+        raise HTTPException(status_code=422, detail="标题不能为空")
+    if not post_in.content:
+        raise HTTPException(status_code=422, detail="内容不能为空")
+    
     if post_in.category_id:
-        from app.models.category import Category
+        from app.models.categories import Category
         category = db.query(Category).first(Category.id==post_in.category_id).first()
         if not category:
             raise HTTPException(status_code=400,detail="分类不存在")
@@ -193,7 +201,7 @@ def update_post(
         raise HTTPException(status_code=400,detail="文章不存在")
     return post
 
-@router.delete("/posts/{post_id}", response_model=Post)
+@router.delete("/posts/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(
         *,
         db: Session = Depends(get_db),
@@ -209,7 +217,7 @@ def delete_post(
         current_user (User): 当前登录用户
     
     返回:
-        Post: 删除的文章对象
+        None: 成功删除时不返回内容
     """
     db_post = post_crud.get_post(db,post_id=post_id)
     if not db_post:
@@ -220,8 +228,9 @@ def delete_post(
     success = post_crud.delete_post(db=db,post_id=post_id)
 
     if not success:
-        raise HTTPException(status_code=400,detail="文章不存在")
-    return None
+        raise HTTPException(status_code=400,detail="删除失败")
+    # 204状态码不需要返回内容
+    return
 
 @router.get("/stats/posts",response_model=dict)
 def get_post_stats(

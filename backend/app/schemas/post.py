@@ -4,9 +4,9 @@ from datetime import datetime
 from .base import BaseSchema
 
 class PostBase(BaseModel):
-    title:str = Field(...,min_length=1,max_length=200)
-    content:str
-    excerpt:Optional[str]=Field(None,max_length=500)
+    title:str = Field(...,min_length=1,max_length=200,strip_whitespace=True)
+    content:str = Field(...,min_length=1,strip_whitespace=True)
+    excerpt:Optional[str]=Field(None,max_length=500,strip_whitespace=True)
     status:str=Field(default="draft",pattern="^(draft|published|archived)$")
     visibility:str=Field(default="public",pattern="^(public|private)$")
     featured_image:Optional[str]=None
@@ -21,8 +21,23 @@ class PostBase(BaseModel):
 class PostCreate(PostBase):
     @field_validator("title")
     def validate_title(cls, value):
-        if not value or not value.strip():
-            raise ValueError("标题不能为空")
+        if value is None:
+            raise ValueError("标题不能为null")
+        if not isinstance(value, str):
+            raise ValueError("标题必须是字符串类型")
+        if not value.strip():
+            raise ValueError("标题不能为空或只包含空格")
+        return value.strip()
+    
+    @field_validator("content")
+    def validate_content(cls, value):
+        if value is None:
+            raise ValueError("内容不能为null")
+        if not isinstance(value, str):
+            raise ValueError("内容必须是字符串类型")
+        if not value.strip():
+            raise ValueError("内容不能为空或只包含空格")
+        return value.strip()
 
 # 更新文章
 class PostUpdate(BaseModel):

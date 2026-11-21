@@ -15,7 +15,7 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 
-import { LuChevronRight,LuFilePenLine } from "react-icons/lu";
+import { LuChevronRight,LuFilePenLine,LuFileX } from "react-icons/lu";
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -111,7 +111,7 @@ const PostDetail: React.FC = () => {
                                 });
                             }}
                             >
-                                <LuFilePenLine/>
+                                <LuFileX />
                             </IconButton>
                         </HStack>
                     )}

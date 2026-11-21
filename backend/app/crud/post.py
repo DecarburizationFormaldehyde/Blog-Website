@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc,asc,or_,and_
 from typing import Optional,List,Dict,Any
 from datetime import datetime
-
+from slugify import slugify
 
 from ..models.post import Post
 from ..models.tags import Tag
@@ -98,7 +98,6 @@ def create_post(db:Session,post:PostBase,author_id:int)->Post:
         Post: 创建的文章对象
     """
     import re
-    from slugify import slugify
 
     # 确保标题不为None
     title = post.title or "untitled"

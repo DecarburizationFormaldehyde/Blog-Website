@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type {UserLogin, UserRegister, PostCreate, PostUpdate} from '../types';
 
-const API_URL = 'http://localhost:8000/api/v1';
+const API_URL = 'http://39.96.116.136:8000/api/v1';
 
 // 创建 axios 实例
 const api = axios.create({
@@ -104,7 +104,10 @@ export const postService = {
     api.put(`/posts/${id}`, postData).then(res => res.data),
 
   deletePost: (id: number) =>
-    api.delete(`/posts/${id}`).then(res => res.data),
+    api.delete(`/posts/${id}`).then(res => {
+      // 204状态码没有响应体，直接返回true表示成功
+      return res.status === 204 ? true : res.data;
+    }),
 
   getPostStats: () =>
     api.get('/stats/posts').then(res => res.data),

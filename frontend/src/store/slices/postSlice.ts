@@ -32,6 +32,7 @@ export const fetchPosts =createAsyncThunk(
         status?: string;
         category_id?: number;
         tag_id?: number;
+        author_id?: number;
     },{ rejectWithValue })=>{
         try{
             const response = await postService.getPosts(params);
@@ -58,10 +59,24 @@ export const createPost =  createAsyncThunk(
     'posts/createPost',
     async (postData: PostCreate,{ rejectWithValue })=>{
         try{
+            console.log('发送到后端的数据:', postData);
             const response = await postService.createPost(postData);
             return response;
         }catch (error:any){
-            return  rejectWithValue(error.response?.data?.detail||'创建文章失败');
+            console.error('创建文章API错误:', error);
+            console.error('错误响应:', error.response?.data);
+            
+            // 处理不同的错误类型
+            let errorMessage = '创建文章失败';
+            if (error.response?.data?.detail) {
+                errorMessage = error.response.data.detail;
+            } else if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            return rejectWithValue(errorMessage);
         }
     }
 );
@@ -85,10 +100,12 @@ export const deletePost = createAsyncThunk(
     'posts/deletePost',
     async (id: number,{ rejectWithValue })=>{
         try{
-            const response = await postService.deletePost(id);
-            return response;
+            await postService.deletePost(id);
+            // 对于204状态码，不需要返回数据，直接返回id
+            return { id };
         }catch (error:any){
-            return rejectWithValue(error.response?.data?.detail||'删除文章失败');
+            console.error('删除文章API错误:', error);
+            return rejectWithValue(error.response?.data?.detail || '删除文章失败');
         }
     }
 );

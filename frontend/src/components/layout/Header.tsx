@@ -103,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                                 <MenuItem value="posts" onClick={() => navigate('/dashboard/posts')}>
                                     我的文章
                                 </MenuItem>
-                                <MenuItem value="create" onClick={() => navigate('/dashboard/create')}>
+                                <MenuItem value="create" onClick={() => navigate('/dashboard/new')}>
                                     写文章
                                 </MenuItem>
                                 {user?.is_admin ? (

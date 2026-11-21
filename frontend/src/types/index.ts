@@ -78,8 +78,8 @@ export interface PostCreate{
     featured_image?: string;
     pinned?: boolean;
     allow_comments?: boolean;
-    category_id?: number;
-    series_id?: number;
+    category_id?: number | null;
+    series_id?: number | null;
     tags?: string[];
 }
 
@@ -92,8 +92,8 @@ export interface PostUpdate{
     featured_image?: string;
     pinned?: boolean;
     allow_comments?: boolean;
-    category_id?: number;
-    series_id?: number;
+    category_id?: number | null;
+    series_id?: number | null;
     tags?: string[];
 }
 

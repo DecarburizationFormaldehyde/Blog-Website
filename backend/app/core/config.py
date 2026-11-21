@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./data/blog.db"
 
     # CORS配置
-    BACKEND_CORS_ORIGINS: list = ["http://localhost:3000","http://localhost:5173"]
+    BACKEND_CORS_ORIGINS: list = ["http://39.96.116.136:5173"]
 
     # 密码加密配置
     BCRYPT_ROUNDS:int = 12

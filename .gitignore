@@ -1,21 +1,73 @@
-.venv
-backend/uv.lock
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
 
-# Docker
+# ---------- 环境变量 / 密钥 ----------
+# 真实的 .env、.env.production 等一律不入库，只保留示例文件
 .env
-.dockerignore
+.env.*
+!.env.example
 
-# 数据库
+# ---------- 数据库 / 本地数据 ----------
 backend/data/
-backend/*.db
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 
-# 日志
+# ---------- Node / 前端 ----------
+node_modules/
+frontend/dist/
+frontend/build/
+frontend/dist-ssr/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------- IDE / 编辑器 ----------
+.idea/
+.vscode/
+*.iml
+*.suo
+*.sw?
+
+# ---------- 操作系统 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 日志 ----------
 *.log
 logs/
 
-# Node modules
-frontend/node_modules/
+# ---------- 临时 / 打包产物 ----------
+tmp/
+temp/
+.cache/
+*.tar
+*.tar.gz
+*.tgz
+*.zip
 
-# 构建产物
-frontend/dist/
-frontend/build/
+# ---------- 依赖锁文件 ----------
+# 按当前项目约定 uv.lock 不入库；如需可复现构建，可删除下面这行并提交该文件
+backend/uv.lock

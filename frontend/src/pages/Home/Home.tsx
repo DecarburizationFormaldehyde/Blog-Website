@@ -60,7 +60,7 @@ const Home: React.FC = () => {
                   浏览文章
                 </Button>
               </RouterLink>
-              <RouterLink to="/login">
+              <RouterLink to="/new">
                 <Button size="lg" colorScheme="white">
                   开始写作
                 </Button>
